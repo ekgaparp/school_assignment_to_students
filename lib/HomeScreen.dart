@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:schoo0l_assignment/assign_to_student/assign_page.dart';
+import 'package:schoo0l_assignment/groups_create/group_page.dart';
+import 'package:schoo0l_assignment/groups_create/group_page_screen.dart';
+import 'package:schoo0l_assignment/model/group_medel.dart';
 import 'package:schoo0l_assignment/respository/respository_getdata.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,11 +17,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GetDataFromFirebase getDataFromFirebase = GetDataFromFirebase();
-
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   @override
   void initState() {
-    // TODO: implement initState
+    _getDocumentUser();
     super.initState();
+  }
+
+  Future<void> _getDocumentUser() async {
+    final dataFromFirebase =
+        await FirebaseFirestore.instance.collection('createGroup').doc().get();
+    print('object :${dataFromFirebase.data()}');
   }
 
   List science = [
@@ -37,135 +47,73 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 30, top: 5),
-            child: InkWell(
-              onTap: () => widget.zoomController.toggle(),
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    border: Border.all(color: Colors.grey)),
-                child: const Icon(
-                  IconlyBroken.category,
-                  color: Colors.black,
-                ),
-              ),
+        leading: InkWell(
+          onTap: () => widget.zoomController.toggle(),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            child: const Icon(
+              Icons.menu,
+              color: Colors.black,
             ),
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Today's Activity",
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              const Text(
-                '12 new assignments uploaded',
-                style: TextStyle(fontSize: 20, color: Colors.grey),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              overlapped(),
-              const SizedBox(
-                height: 20,
-              ),
-              const Divider(
-                thickness: 1,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  radius: 28.0,
-                  child: Image.asset('assets/icons/1.png'),
-                ),
-                title: const Text(
-                  'Science',
-                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                ),
-                subtitle: const Text('3 Assignment'),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              SizedBox(
-                height: 230,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: science.length,
-                    itemBuilder: (context, index) {
-                      return AspectRatio(
-                        aspectRatio: 1.5,
-                        child: Container(
-                          height: 250,
-                          margin: const EdgeInsets.only(right: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            image: DecorationImage(
-                                image: AssetImage(science[index]),
-                                fit: BoxFit.contain),
-                            color: Colors.purple[100],
-                          ),
-                        ),
-                      );
-                    }),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  radius: 28.0,
-                  child: Image.asset('assets/icons/2.png'),
-                ),
-                title: const Text(
-                  'Math',
-                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                ),
-                subtitle: const Text('4 Assignment'),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              SizedBox(
-                height: 230,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: math.length,
-                    itemBuilder: (context, index) {
-                      return AspectRatio(
-                        aspectRatio: 1.5,
-                        child: Container(
-                          height: 250,
-                          margin: const EdgeInsets.only(right: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            image: DecorationImage(
-                                image: AssetImage(math[index]),
-                                fit: BoxFit.contain),
-                            color: Colors.purple[100],
-                          ),
-                        ),
-                      );
-                    }),
-              )
-            ],
-          ),
         ),
+        centerTitle: true,
+        title: const Text("Today's Activity",
+            style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Colors.black)),
+        elevation: 0,
+        backgroundColor: Colors.white,
+      ),
+      body: StreamBuilder(
+        stream:
+            FirebaseFirestore.instance.collection("createGroup").snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return ListView(
+              shrinkWrap: true,
+              children: snapshot.data!.docs.map((e) {
+                return SizedBox(
+                  height: 300,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                    margin: const EdgeInsets.all(15),
+                    elevation: 10,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return GroupPageScreen(
+                            nameGroup: e['namegroup'],
+                          );
+                        }));
+                      },
+                      child: Column(
+                        children: [
+                          ListTile(
+                            leading: CircleAvatar(
+                              child: Image.asset('assets/icons/1.png'),
+                            ),
+                            title: Text(e['namegroup']),
+                          ),
+                          Image.asset(
+                            'assets/images/Teaching-cuate.png',
+                            width: 250,
+                            height: 200,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }).toList());
+        },
       ),
       bottomNavigationBar: BottomNavigationBar(
         iconSize: 25,
@@ -197,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.purple[200],
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return const AssignmentPageScreen();
+            return const groupPageScreen();
           }));
         },
         tooltip: 'Increment',

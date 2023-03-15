@@ -83,13 +83,10 @@ class _FromRegisterAllUserState extends State<FromRegisterAllUser> {
             .collection("Users")
             .doc(firebaseUser!.uid)
             .set({
-          // "name": _profile.fname,
-          // "lastname": _profile.lname,
           "UID": firebaseUser.uid.toString(),
           "email": emailregister.text,
           "password": passwordRegister.text,
           "comfirmpassword": passwordConRegiter.text,
-          // "role": _profile.roleUser,
           "status": 'not complete'
         });
       } on FirebaseAuthException catch (e) {

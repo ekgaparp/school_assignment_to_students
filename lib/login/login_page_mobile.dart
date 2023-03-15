@@ -1,13 +1,16 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:schoo0l_assignment/HomeScreen.dart';
 import 'package:schoo0l_assignment/login/form_register.dart';
 import 'package:schoo0l_assignment/main.dart';
 import 'package:schoo0l_assignment/model/profile_all_user.dart';
+import 'package:schoo0l_assignment/profile/addprofile.dart';
 
 import 'package:schoo0l_assignment/service/overlay.dart';
 
@@ -46,53 +49,54 @@ class _LoginAllScreenState extends State<LoginAllScreen> {
     }));
   }
 
-  // Future<void> _GetroleUser(BuildContext context) async {
-  //   try {
-  //     final _userCurrent = FirebaseAuth.instance.currentUser;
+  Future<void> _getroleUser() async {
+    try {
+      final userCurrent = FirebaseAuth.instance.currentUser;
 
-  //     final FirebaseFirestore _database = FirebaseFirestore.instance;
-  //     DocumentSnapshot<Map<String, dynamic>> documentReference =
-  //         await _database.collection('Users').doc(_userCurrent.uid).get();
-  //     final roleBase = documentReference.get('role');
-  //     print('roleBase :$roleBase');
-  //     final statusUser = documentReference.get('status');
-  //     print('statusUser :$statusUser');
-  //     if (roleBase == 'นักศึกษา') {
-  //       if (statusUser == 'not complete') {
-  //         print(1);
-  //         Navigator.push(context, MaterialPageRoute(builder: ((context) {
-  //           return AddProfileScreen();
-  //         })));
-  //       } else {
-  //         print(2);
-  //         Navigator.push(context, MaterialPageRoute(builder: ((context) {
-  //           return HomeStudentPage();
-  //         })));
-  //       }
-  //     }
-  //     if (roleBase == 'ผู้ให้คำปรึกษา') {
-  //       if (statusUser == 'not complete') {
-  //         print(3);
-  //         Navigator.push(context, MaterialPageRoute(builder: ((context) {
-  //           return AddProfileScreencon();
-  //         })));
-  //       } else {
-  //         print(4);
-  //         Navigator.push(context, MaterialPageRoute(builder: ((context) {
-  //           return HomeConsultScreen();
-  //         })));
-  //       }
-  //     }
-  //     if (roleBase == 'ผู้ดูเเลระบบ') {
-  //       print(5);
-  //       Navigator.push(context, MaterialPageRoute(builder: ((context) {
-  //         return HomeScreenofAdmin();
-  //       })));
-  //     }
-  //   } catch (error) {
-  //     Fluttertoast.showToast(msg: error.toString());
-  //   }
-  // }
+      final FirebaseFirestore database = FirebaseFirestore.instance;
+      DocumentSnapshot<Map<String, dynamic>> documentReference =
+          await database.collection('Users').doc(userCurrent!.uid).get();
+      // final roleBase = documentReference.get('role');
+      // print('roleBase :$roleBase');
+      final statusUser = documentReference.get('status');
+      print('statusUser :$statusUser');
+      // if (roleBase == 'นักศึกษา') {
+      if (statusUser == 'not complete') {
+        print(1);
+        Navigator.push(context, MaterialPageRoute(builder: ((context) {
+          // return AddProfileScreen();
+          return const HomeScreen();
+        })));
+      } else {
+        print(2);
+        Navigator.push(context, MaterialPageRoute(builder: ((context) {
+          return const HomeScreen();
+        })));
+      }
+      // }
+      // if (roleBase == 'ผู้ให้คำปรึกษา') {
+      //   if (statusUser == 'not complete') {
+      //     print(3);
+      //     Navigator.push(context, MaterialPageRoute(builder: ((context) {
+      //       return AddProfileScreencon();
+      //     })));
+      //   } else {
+      //     print(4);
+      //     Navigator.push(context, MaterialPageRoute(builder: ((context) {
+      //       return HomeConsultScreen();
+      //     })));
+      //   }
+      // }
+      // if (roleBase == 'ผู้ดูเเลระบบ') {
+      //   print(5);
+      //   Navigator.push(context, MaterialPageRoute(builder: ((context) {
+      //     return HomeScreenofAdmin();
+      //   })));
+      // }
+    } catch (error) {
+      Fluttertoast.showToast(msg: error.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +210,8 @@ class _LoginAllScreenState extends State<LoginAllScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(0))),
           onPressed: () async {
-            await signInWithEmailAndPassword().whenComplete(() {});
+            await signInWithEmailAndPassword();
+            await _getroleUser();
           },
           child: const Text("เข้าสู่ระบบ", style: TextStyle(fontSize: 25))),
     );
@@ -229,7 +234,9 @@ class _LoginAllScreenState extends State<LoginAllScreen> {
           },
           child: const Text(
             "  สร้างบัญชีใหม่",
-            style: TextStyle(color: Colors.green, fontWeight: FontWeight.w600),
+            style: TextStyle(
+                color: Color.fromARGB(255, 255, 0, 251),
+                fontWeight: FontWeight.w600),
           ),
         )
       ],

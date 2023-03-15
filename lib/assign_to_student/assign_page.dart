@@ -1,8 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:schoo0l_assignment/model/assignment_model.dart';
 import 'package:schoo0l_assignment/service/overlay.dart';
 import 'package:simple_text_form_field/simple_contants.dart';
 import 'package:simple_text_form_field/simple_text_form_field.dart';
@@ -55,22 +56,16 @@ class _AssignmentPageScreenState extends State<AssignmentPageScreen> {
 
   Future<void> scheduleNotification() async {
     var scheduledNotificationDateTime =
-        DateTime.now().add(Duration(seconds: 4));
+        DateTime.now().add(const Duration(seconds: 4));
     var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
       'channel id',
       'channel name',
-      icon: 'flutter_devs',
-      largeIcon: DrawableResourceAndroidBitmap('flutter_devs'),
     );
     var platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
     );
-    await flutterLocalNotificationsPlugin.schedule(
-        0,
-        'scheduled title',
-        'scheduled body',
-        scheduledNotificationDateTime,
-        platformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.schedule(0, 'เเจ้งเตือนการส่งงาน',
+        'เวลา 18.00', scheduledNotificationDateTime, platformChannelSpecifics);
   }
 
   SimpleTextFormFieldController controllerSubjectName =
@@ -97,7 +92,7 @@ class _AssignmentPageScreenState extends State<AssignmentPageScreen> {
         systemOverlayStyle:
             const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);

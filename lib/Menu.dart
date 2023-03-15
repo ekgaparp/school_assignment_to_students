@@ -1,8 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:schoo0l_assignment/appoitment/appoitment.dart';
 import 'package:schoo0l_assignment/assign_to_student/list_assignment_page.dart';
+import 'package:schoo0l_assignment/groups_create/group_page.dart';
+import 'package:schoo0l_assignment/lecture/lecture.dart';
 import 'package:schoo0l_assignment/login/login_page_mobile.dart';
 import 'package:schoo0l_assignment/main.dart';
+import 'package:schoo0l_assignment/profile/addprofile.dart';
+import 'package:schoo0l_assignment/register_groups/register_to_group.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -58,7 +63,12 @@ class _MenuScreenState extends State<MenuScreen> {
                       height: 8,
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddProfileScreen()));
+                      },
                       child: const Text(
                         "View Profile",
                         style: TextStyle(fontSize: 17, color: Colors.white54),
@@ -70,7 +80,7 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
             ListTile(
               title: const Text(
-                "Home",
+                "หน้าหลัก",
                 style:
                     TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
               ),
@@ -82,24 +92,57 @@ class _MenuScreenState extends State<MenuScreen> {
               },
             ),
             ListTile(
-              title: const Text("Edit Profile",
+              title: const Text("กำหนดนัดหมาย",
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.w600)),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const appoitmentScreen()));
+              },
+            ),
+            // ListTile(
+            //   title: const Text("Settings",
+            //       style: TextStyle(
+            //           color: Colors.white, fontWeight: FontWeight.w600)),
+            //   onTap: () {},
+            // ),
+            ListTile(
+              title: const Text("สร้างกลุ่ม",
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w600)),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const groupPageScreen()));
+              },
             ),
             ListTile(
-              title: const Text("Settings",
+              title: const Text("สมุดโน๊ต",
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.w600)),
-              onTap: () {},
-            ),
-            const ListTile(
-              title: Text("Support",
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w600)),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const lectureNoteScreen()));
+              },
             ),
             ListTile(
-              title: const Text("Assignment",
+              title: const Text("สมัครเข้ากลุ่มและออกจากกลุ่ม",
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w600)),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const registerToGroupScreen()));
+              },
+            ),
+            ListTile(
+              title: const Text("รายการการเเจ้งเตือน",
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.w600)),
               onTap: () {
@@ -109,18 +152,16 @@ class _MenuScreenState extends State<MenuScreen> {
                         builder: (context) => const ListAssignmentPage()));
               },
             ),
-            ListTile(
-              title: const Text("Grades",
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w600)),
-              onTap: () {},
-            ),
+            // ListTile(
+            //   title: const Text("Grades",
+            //       style: TextStyle(
+            //           color: Colors.white, fontWeight: FontWeight.w600)),
+            //   onTap: () {},
+            // ),
             const SizedBox(
               height: 20.0,
             ),
-            const SizedBox(
-              height: 100.0,
-            ),
+
             ListTile(
               title: const Text("Logout",
                   style: TextStyle(
